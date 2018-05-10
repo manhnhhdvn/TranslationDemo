@@ -42,6 +42,7 @@
                                     <constraint firstAttribute="width" constant="60" id="3Nq-lG-uKb"/>
                                     <constraint firstAttribute="height" constant="60" id="LRb-Uy-h1C"/>
                                 </constraints>
+                                <state key="normal" title="Start"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                         <real key="value" value="30"/>

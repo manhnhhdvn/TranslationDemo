@@ -9,7 +9,7 @@
 import UIKit
 import Speech
 
-class ViewController: UIViewController, SFSpeechRecognizerDelegate {
+class ViewController: UIViewController, SFSpeechRecognizerDelegate, AVSpeechSynthesizerDelegate {
 
     @IBOutlet weak var activitySpinner: UIActivityIndicatorView!
     @IBOutlet weak var inputTextView: UITextView!
@@ -70,7 +70,11 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
 
         let audioSession = AVAudioSession.sharedInstance()
         do {
-            try audioSession.setCategory(AVAudioSessionCategoryRecord)
+
+//            try audioSession.setCategory(AVAudioSessionCategoryPlayback)
+//            try audioSession.setMode(AVAudioSessionModeDefault)
+            try audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
+//            try audioSession.setCategory(AVAudioSessionCategoryRecord)
             try audioSession.setMode(AVAudioSessionModeMeasurement)
             try audioSession.setActive(true, with: .notifyOthersOnDeactivation)
         } catch {
@@ -133,12 +137,25 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         }
     }
 
+    func textToSpeech() {
+        let string = self.inputTextView.text
+        if string == "Say something, I'm listening!" {
+            return
+        }
+        let utterance = AVSpeechUtterance(string: string!)
+        utterance.voice = AVSpeechSynthesisVoice(language: "ja_JP")
+        let synth = AVSpeechSynthesizer()
+        synth.delegate = self
+        synth.speak(utterance)
+    }
+
     @IBAction func tappedMicrophoneButton(_ sender: Any) {
         if audioEngine.isRunning {
             audioEngine.stop()
             recognitionRequest?.endAudio()
             microphoneButton.isEnabled = false
             microphoneButton.setTitle("Start", for: .normal)
+            self.textToSpeech()
         } else {
             startRecording()
             microphoneButton.setTitle("Stop", for: .normal)
